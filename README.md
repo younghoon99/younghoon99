@@ -1,4 +1,4 @@
-## Hi there 👋
+## 안녕 👋
 
 <!--
 **younghoon99/younghoon99** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
