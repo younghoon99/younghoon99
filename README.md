@@ -1,37 +1,68 @@
 <div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=임영훈의%20포트폴리오&fontSize=50&animation=fadeIn" />
+  <img src="https://capsule-render.vercel.app/api?type=Venom&color=0:6c5ce7,100:a29bfe&height=300&section=header&text=Development%20Log&fontSize=70&animation=twinkling&fontColor=e9e1ff&fontAlignY=40&desc=Unity%20VR%20Developer%20Portfolio&descSize=25&descAlignY=60&stroke=483d8b&strokeWidth=1" />
 </div>
 
-# 임영훈의 포트폴리오
+##
+<br><br>
+<div align="center">
+  <h3>
+   "As a developer specializing in immersive game development using Unity and VR,<br>
+I am dedicated to building richer and more engaging virtual worlds."
+  </h3>
+</div>
+<br><br>
 
-> "유니티와 VR을 통해 몰입형 게임을 개발하며,
-> 
-> 더 나은 가상 세계를 만들어가는
-> 
-> 개발자 임영훈입니다."
-
-## 📊 기본 정보
-
-- 🎂 Birth: 1999.03.19
-- 📧 E-Mail: dladudgns321@naver.com
-- 📝 Tech Blog: https://blog.naver.com/y_oung99
-- 📷 Instagram: https://www.instagram.com/y___oung99
-- 🎞️ Youtube: https://www.youtube.com/@%EC%B4%88%EC%BD%94-v7b
-
-## 🔧 Skills and Tools
+## 📊 Profile
 
 <div align="center">
-  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=CSharp&logoColor=white"/>
+  <a href="mailto:dladudgns321@naver.com">
+    <img src="https://play-lh.googleusercontent.com/bNjenFo-3IQw2OQpmDf0UBskurC_NMINYlX3FAHHT43i7lt6FEb-_ktXQaQcAXDi7pA" width="40" alt="Email"/>
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://blog.naver.com/y_oung99">
+    <img src="https://play-lh.googleusercontent.com/rdmNKWDpwdzP-UBlrKQqVWwOm0vnvXg8lOD4vRQJQm8AR2lK2BBAGbrPzlDfI9lWyQ" width="40" alt="Blog"/>
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.instagram.com/y___oung99">
+    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png" width="40" alt="Instagram"/>
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.youtube.com/@%EC%B4%88%EC%BD%94-v7b">
+    <img src="https://littledeep.com/wp-content/uploads/2020/09/youtube-icon-style.png" width="40" alt="YouTube"/>
+  </a>
+</div>
+
+
+
+
+
+## 🔧 Tech Stack & Tools
+
+<div align="center">
+  <h3>🎮 Game Development</h3>
   <img src="https://img.shields.io/badge/Unity-000000?style=for-the-badge&logo=Unity&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>
+  <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=CSharp&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Unity%20XR-000000?style=for-the-badge&logo=Unity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/VRChat%20SDK-000000?style=for-the-badge&logo=VRChat&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Oculus%20Integration-1C1E20?style=for-the-badge&logo=Oculus&logoColor=white"/>
+  <br>
+  <img src="https://img.shields.io/badge/Unity%20Shader%20Graph-000000?style=for-the-badge&logo=Unity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Photon%20Networking-00ADEF?style=for-the-badge&logo=Photon&logoColor=white"/>
+  <img src="https://img.shields.io/badge/UdonSharp-5865F2?style=for-the-badge&logo=VRChat&logoColor=white"/>
+  
+  <h3>🎨 Design & 3D Modeling</h3>
   <img src="https://img.shields.io/badge/Blender-F5792A?style=for-the-badge&logo=Blender&logoColor=white"/>
   <img src="https://img.shields.io/badge/Photoshop-31A8FF?style=for-the-badge&logo=Adobe%20Photoshop&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Unity%20Shader%20Graph-000000?style=for-the-badge&logo=Unity&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>
+ 
+  
+  <h3>🛠️ Collaboration</h3>
   <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
   <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/>
 </div>
 
-## 🎮 프로젝트 갤러리
+
+## 🎮 Project Gallery
 
 <table>
   <tr>
@@ -1416,6 +1447,4 @@ public class OpenLocker : MonoBehaviour
   </tr>
 </table>
 
-<div align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer" />
-</div>
+
