@@ -773,6 +773,437 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     <td width="60%">
       <h3>🏰 타운 프로젝트 Long live town (2025.01.27 ~ 2025.04.27)</h3>
       <p>생존과 마을 디펜스 요소를 결합한 2D 게임입니다. 자원 관리, 타워 건설, 적 방어 시스템을 구현했습니다.</p>
+      
+<details>
+        <summary>🧟적 체력 및 데미지 시스템    </summary>
+   
+```csharp
+public class EnemyHealth : MonoBehaviour
+{
+    [Header("체력 설정")]
+    public float maxHealth = 100f;      // 최대 체력
+    public float currentHealth;         // 현재 체력
+    
+    [Header("UI 설정")]
+    public Image healthBarImage;        // 체력바 이미지
+    public float smoothSpeed = 5f;      // 체력바 변화 속도
+    public GameObject floatingDamageTextPrefab; // 데미지 텍스트 프리팹
+    
+    // 데미지 처리 함수
+    public void TakeDamage(float damage, Vector2 hitPosition = default)
+    {
+        // 죽었거나 무적 상태면 데미지를 받지 않음
+        if (isDead || isInvincible) return;
+        
+        // 체력 감소
+        currentHealth = Mathf.Max(0, currentHealth - damage);
+        
+        // 데미지 텍스트 생성
+        ShowDamageText(damage);
+        
+        // 체력바 업데이트
+        UpdateHealthBar();
+        
+        // 사망 체크
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            // 무적 시간 및 깜빡임 효과 적용
+            StartCoroutine(InvincibilityCoroutine());
+        }
+    }
+    
+    // 데미지 텍스트 표시 함수
+    private void ShowDamageText(float damage)
+    {
+        // 데미지 텍스트 생성 및 애니메이션 처리
+        if (floatingDamageTextPrefab != null)
+        {
+            GameObject textObj = Instantiate(floatingDamageTextPrefab, transform.position + Vector3.up, Quaternion.identity);
+            TextMeshProUGUI tmpText = textObj.GetComponent<TextMeshProUGUI>();
+            if (tmpText != null)
+            {
+                tmpText.text = damage.ToString("0");
+                StartCoroutine(AnimateDamageText(textObj));
+            }
+        }
+    }
+}
+```
+</details>
+
+<details>
+        <summary>💬플레이어 공격 및 상호작용 시스템   </summary>
+   
+```csharp
+public class Player : MonoBehaviour
+{
+    // 현재 플레이어가 장착한 아이템
+    public Item equippedItem;
+    
+    // 공격 설정
+    [Header("공격 설정")]
+    private float attackDamage;      
+    [SerializeField] private float attackRange = 1.5f;
+    [SerializeField] private Transform attackPoint;
+    
+    // 외부에서 장착 아이템을 세팅하는 함수
+    public void SetEquippedItem(Item item)
+    {
+        equippedItem = item;
+        
+        // 아이템이 있으면 데미지 설정, 없으면 기본 데미지 1로 설정
+        if (item != null && item.itemType == ItemType.Weapon)
+        {
+            attackDamage = item.damage;
+        }
+        else
+        {
+            attackDamage = 1f; // 기본 데미지
+        }
+    }
+    
+    // 공격 수행 함수
+    private void Attack()
+    {
+        if (isAttacking) return; // 이미 공격 중이면 무시
+        
+        isAttacking = true;
+        
+        // 공격 애니메이션 재생
+        if (animator != null)
+        {
+            animator.SetTrigger("1_Attack");
+        }
+        
+        // 공격 데미지 적용 (딜레이 후)
+        StartCoroutine(ApplyAttackDamage());
+        
+        // 공격 쿨다운 시작
+        StartCoroutine(AttackCooldown());
+    }
+    
+    // 공격 데미지 적용 코루틴
+    private IEnumerator ApplyAttackDamage()
+    {
+        // 공격 애니메이션 시작 후 일정 시간 대기
+        yield return new WaitForSeconds(attackDelay);
+        
+        // 공격 범위 내 적 감지
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Enemy"));
+        
+        // 감지된 모든 적에게 데미지 적용
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                // 데미지 적용 (현재 위치 기준)
+                enemyHealth.TakeDamage(attackDamage, attackPoint.position);
+            }
+        }
+    }
+}
+```
+</details>
+
+<details>
+        <summary>👩‍🦲NPC 상호작용 시스템    </summary>
+   
+```csharp
+public class NpcInteraction : MonoBehaviour
+{
+    [Header("상호작용 설정")]
+    [SerializeField] private float interactionRange = 2.0f;
+    [SerializeField] private KeyCode interactionKey = KeyCode.F;
+    
+    [Header("UI 설정")]
+    private GameObject interactionPrompt;    // NPC와 상호작용할 수 있을 때 표시되는 프롬프트 UI
+    private GameObject npcInfoPanel;         // NPC 정보를 표시하는 패널
+    
+    // 참조 변수
+    private Transform playerTransform;
+    private Npc currentNpc;
+    public bool isInteracting = false;
+    
+    // 가장 가까운 NPC 찾기
+    private Npc FindNearestNpc()
+    {
+        Npc closestNpc = null;
+        float closestDistance = interactionRange;
+        
+        Npc[] allNpcs = FindObjectsOfType<Npc>();
+        foreach (Npc npc in allNpcs)
+        {
+            float distance = Vector3.Distance(playerTransform.position, npc.transform.position);
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestNpc = npc;
+            }
+        }
+        
+        return closestNpc;
+    }
+    
+    // NPC와 상호작용 시작
+    private void StartInteraction(Npc npc)
+    {
+        currentNpc = npc;
+        isInteracting = true;
+        
+        // 플레이어 공격 비활성화
+        Player player = playerTransform.GetComponent<Player>();
+        if (player != null)
+            player.isAttack = false;
+        
+        // NPC 정보 패널 표시
+        if (npcInfoPanel)
+        {
+            npc.transform.GetChild(1).transform.Find("npcInfoPanel").gameObject.SetActive(true);
+        }
+        
+        // 상호작용 프롬프트 숨기기
+        if (interactionPrompt)
+            npc.transform.GetChild(1).transform.Find("NPCPrompt").gameObject.SetActive(false);
+        
+        // NPC에게 상호작용 시작 알림
+        npc.OnInteractionStart();
+    }
+}
+```
+</details>
+
+<details>
+        <summary>🏹화살 발사 NPC 시스템   </summary>
+   
+```csharp
+public class ArrowShooter_Npc : MonoBehaviour
+{
+    public static bool isBowEquipped = false;
+    public static int arrowDamage;
+    public GameObject arrowPrefab; // 화살 프리팹
+    public Transform shootPoint;  // 화살이 발사될 위치
+    public float arcHeight = 2f; // 반원 또는 타원의 높이
+    public float maxShootDistance = 10f; // 발사 가능 최대 X축 거리
+    
+    private Queue<GameObject> arrowPool = new Queue<GameObject>(); // 화살 오브젝트 풀
+    private float lastShootTime = -999f;
+    private Npc npc;
+    
+    void Update()
+    {
+        // NPC 자동 발사: 가장 가까운 몹이 일정 거리 이내면 쿨타임마다 자동 발사
+        GameObject targetMob = FindNearestMob();
+        if (targetMob == null) return;
+        
+        float distance = Mathf.Abs(shootPoint.position.x - targetMob.transform.position.x);
+        if (distance > maxShootDistance) return;
+        
+        if (npc.bow.activeSelf == true)
+        {
+            isBowEquipped = true;
+            arrowDamage = npc.attackDamage;
+        }
+        else
+        {
+            isBowEquipped = false;
+        }
+        
+        if (Time.time - lastShootTime >= 1.0f) // 쿨타임 1초
+        {
+            if (isBowEquipped && ShootArrow())
+            {
+                lastShootTime = Time.time;
+                GameManager.instance.PlaySFX("ArrowAttack");
+            }
+        }
+    }
+    
+    // 화살 발사 함수
+    public bool ShootArrow()
+    {
+        // 가장 가까운 몹 찾기
+        GameObject targetMob = FindNearestMob();
+        if (targetMob == null) return false;
+        
+        // 거리 체크
+        float xDistanceToMob = Mathf.Abs(shootPoint.position.x - targetMob.transform.position.x);
+        if (xDistanceToMob > maxShootDistance) return false;
+        
+        // 화살 가져오기
+        GameObject arrow = GetPooledArrow();
+        if (arrow == null) return false;
+        
+        // 화살 초기화 및 설정
+        arrow.transform.position = shootPoint.position;
+        arrow.SetActive(true);
+        
+        // 화살의 충돌 핸들러에 NPC별 공격력 세팅
+        EffectCollisionHandler handler = arrow.GetComponent<EffectCollisionHandler>();
+        if (handler != null)
+        {
+            handler.isNpcArrow = true; // NPC가 쏜 화살임을 표시
+            handler.npcAttackDamage = npc.attackDamage; // 이 NPC의 공격력
+        }
+        
+        // 화살 이동 코루틴 시작
+        Vector3 startPosition = shootPoint.position + new Vector3(0, 2f, 0);
+        Vector3 targetPosition = targetMob.transform.position + new Vector3(0, 2f, 0);
+        StartCoroutine(MoveArrowInArc(arrow, startPosition, targetPosition));
+        
+        return true;
+    }
+}
+```
+</details>
+
+<details>
+        <summary>🤖NPC 인공지능 시스템   </summary>
+   
+```csharp
+public class Npc : MonoBehaviour
+{
+    // NPC 상태
+    public enum NpcState { Idle, Moving, Interacting, Escaping }
+    private NpcState currentState = NpcState.Idle;
+
+    // NPC 작업 유형
+    public enum NpcTask
+    {
+        None,
+        Woodcutting, // 나무 채집
+        Mining,      // 광물 채집
+        Combat,      // 전투
+        BowCombat    // 활사용 전투
+    }
+    private NpcTask currentTask = NpcTask.None;
+    
+    [Header("이동 설정")]
+    [SerializeField] private float moveSpeed = 1.0f;
+    [SerializeField] private float idleTimeMin = 2.0f;
+    [SerializeField] private float idleTimeMax = 5.0f;
+    [SerializeField] private float moveTimeMin = 1.0f;
+    [SerializeField] private float moveTimeMax = 3.0f;
+    private float movementRange = 30.0f;
+    
+    // 다음 행동 결정
+    private void DecideNextAction()
+    {
+        if (!randomMovementActive) return;
+        
+        // 랜덤 확률로 다음 행동 결정
+        float randomValue = Random.value;
+        
+        if (isMoving)
+        {
+            // 이동 중이면 정지 상태로 전환
+            isMoving = false;
+            currentState = NpcState.Idle;
+            rb.velocity = Vector2.zero;
+            
+            // 정지 시간 랜덤 설정
+            idleTimer = Random.Range(idleTimeMin, idleTimeMax);
+        }
+        else
+        {
+            // 정지 중이면 이동 상태로 전환
+            isMoving = true;
+            currentState = NpcState.Moving;
+            
+            // 랜덤 방향 설정
+            float randomAngle = Random.Range(0f, 360f);
+            moveDirection = new Vector2(
+                Mathf.Cos(randomAngle * Mathf.Deg2Rad),
+                Mathf.Sin(randomAngle * Mathf.Deg2Rad)
+            ).normalized;
+            
+            // 이동 시간 랜덤 설정
+            moveTimer = Random.Range(moveTimeMin, moveTimeMax);
+        }
+    }
+    
+    // 정지 상태 처리
+    private void HandleIdleState()
+    {
+        // 정지 타이머 감소
+        idleTimer -= Time.deltaTime;
+        
+        // 타이머가 0 이하면 다음 행동 결정
+        if (idleTimer <= 0f)
+        {
+            DecideNextAction();
+        }
+        
+        // 애니메이션 업데이트
+        if (animator != null)
+        {
+            animator.SetBool("1_Move", false);
+        }
+    }
+    
+    // 이동 상태 처리
+    private void HandleMovingState()
+    {
+        // 이동 타이머 감소
+        moveTimer -= Time.deltaTime;
+        
+        // 타이머가 0 이하면 다음 행동 결정
+        if (moveTimer <= 0f)
+        {
+            DecideNextAction();
+            return;
+        }
+        
+        // 초기 위치에서 너무 멀어지면 방향 전환
+        Vector3 distanceFromStart = transform.position - initialPosition;
+        if (distanceFromStart.magnitude > movementRange)
+        {
+            // 초기 위치 방향으로 방향 전환
+            moveDirection = -distanceFromStart.normalized;
+        }
+        
+        // 이동 적용
+        rb.velocity = moveDirection * moveSpeed;
+        
+        // 방향 업데이트
+        UpdateDirection(moveDirection);
+        
+        // 애니메이션 업데이트
+        if (animator != null)
+        {
+            animator.SetBool("1_Move", true);
+        }
+    }
+    
+    // 작업 처리
+    private void HandleTask()
+    {
+        switch (currentTask)
+        {
+            case NpcTask.Woodcutting:
+                HandleWoodcuttingTask();
+                break;
+                
+            case NpcTask.Mining:
+                HandleMiningTask();
+                break;
+                
+            case NpcTask.Combat:
+                HandleCombatTask();
+                break;
+                
+            case NpcTask.BowCombat:
+                HandleBowCombatTask();
+                break;
+        }
+    }
+}
+```
+</details>
       <div>
         <img src="https://img.shields.io/badge/공성-5cb85c?style=flat-square"/>
         <img src="https://img.shields.io/badge/타워디펜스-f0ad4e?style=flat-square"/>
