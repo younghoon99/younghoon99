@@ -77,7 +77,7 @@ I am dedicated to building richer and more engaging virtual worlds."
       </a>
     </td>
     <td width="60%">
-      <h3>🌟 VRChat 캠프파이어 맵 (2023.02.04)</h3>
+      <h3>🌟 VRChat 캠프파이어 맵 (2025.02.04)</h3>
       <p>실시간 네트워크 동기화와 파티클 시스템을 활용한 몽환적인 캠프파이어 맵입니다. UdonSynced와 소유권 관리 시스템으로 모든 오브젝트 상태가 실시간으로 동기화됩니다.</p>
       <details>
         <summary>💧물 속 효과</summary>
