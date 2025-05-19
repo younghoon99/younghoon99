@@ -30,6 +30,10 @@ I am dedicated to building richer and more engaging virtual worlds."
 <a href="https://www.youtube.com/@%EC%B4%88%EC%BD%94-v7b">
   <img src="https://littledeep.com/wp-content/uploads/2020/09/youtube-icon-style.png" width="40" alt="YouTube"/>
 </a>
+&nbsp;&nbsp;
+<a href="https://www.notion.so/1c1ddb27d189802a9aa4f18bfff87027?pvs=4">
+  <img src="https://noticon-static.tammolo.com/dgggcrkxq/image/upload/v1566778642/noticon/kjaaizycfgz017qxvlnu.png" width="40" alt="Notion"/>
+</a>
 
 </div>
 
