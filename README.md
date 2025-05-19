@@ -15,21 +15,22 @@ I am dedicated to building richer and more engaging virtual worlds."
 ## 📊 Profile
 
 <div align="center">
-  <a href="mailto:dladudgns321@naver.com">
-    <img src="https://play-lh.googleusercontent.com/bNjenFo-3IQw2OQpmDf0UBskurC_NMINYlX3FAHHT43i7lt6FEb-_ktXQaQcAXDi7pA" width="40" alt="Email"/>
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://blog.naver.com/y_oung99">
-    <img src="https://play-lh.googleusercontent.com/rdmNKWDpwdzP-UBlrKQqVWwOm0vnvXg8lOD4vRQJQm8AR2lK2BBAGbrPzlDfI9lWyQ" width="40" alt="Blog"/>
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://www.instagram.com/y___oung99">
-    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png" width="40" alt="Instagram"/>
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://www.youtube.com/@%EC%B4%88%EC%BD%94-v7b">
-    <img src="https://littledeep.com/wp-content/uploads/2020/09/youtube-icon-style.png" width="40" alt="YouTube"/>
-  </a>
+
+**EMail: dladudgns321@naver.com**
+<br><br>
+
+<a href="https://blog.naver.com/y_oung99">
+  <img src="https://play-lh.googleusercontent.com/rdmNKWDpwdzP-UBlrKQqVWwOm0vnvXg8lOD4vRQJQm8AR2lK2BBAGbrPzlDfI9lWyQ" width="40" alt="Blog"/>
+</a>
+&nbsp;&nbsp;
+<a href="https://www.instagram.com/y___oung99">
+  <img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png" width="40" alt="Instagram"/>
+</a>
+&nbsp;&nbsp;
+<a href="https://www.youtube.com/@%EC%B4%88%EC%BD%94-v7b">
+  <img src="https://littledeep.com/wp-content/uploads/2020/09/youtube-icon-style.png" width="40" alt="YouTube"/>
+</a>
+
 </div>
 
 
