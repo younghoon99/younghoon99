@@ -1222,6 +1222,192 @@ public class Npc : MonoBehaviour
     <td width="60%">
       <h3>🚪 Room Escape - VR 콘텐츠 (2025.01.20 ~ 2025.02.04)</h3>
       <p>Unity XR과 Oculus Quest 2를 활용한 VR 탈출 게임입니다. 다양한 퍼즐과 상호작용 요소를 VR 환경에 맞게 구현했습니다.</p>
+      
+<details>
+        <summary>♟️🧩레벨 관리 시스템   </summary>
+   
+```csharp
+public class Level : MonoBehaviour
+{
+    [Header("기본값")]
+    public List<GameObject> trapObject;    // 함정 오브젝트 리스트
+    [SerializeField] private bool startYn = false;    // 시작여부
+    public GameObject frameTrap;    // 프레임 함정이 없는 프레임
+    
+    [Header("현재 방")]
+    [SerializeField] private int roomNumber;    // 방번호
+    [SerializeField] private int randomNumber;    // 현재 함정 번호
+    public List<GameObject> theTrapObject;    // 현재 함정 오브젝트 리스트
+    
+    // 오브젝트 상태 저장 구조체
+    [System.Serializable]
+    private struct ObjectState
+    {
+        public Vector3 position;      // 위치
+        public Quaternion rotation;   // 회전값
+        public bool isActive;         // 활성화 상태
+    }
+    
+    // 함정 설정 메서드
+    public void SetUpTrap()
+    {
+        // 레벨을 초기 상태로 리셋
+        ResetLevelToInitialState();
+        
+        // 50% 확률로 함정 설치
+        if (Random.Range(0, 2) == 0 && theTrapObject.Count > 0)
+        {
+            randomNumber = Random.Range(0, theTrapObject.Count);
+            theTrapObject[randomNumber].SetActive(true);
+            isTrap = true;
+            if(frameTrap != null) frameTrap.SetActive(false);
+        }
+        else
+        {
+            isTrap = false;
+            if(frameTrap != null) frameTrap.SetActive(true);
+        }
+    }
+    
+    // 트리거 충돌 처리
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.name == "starting" && startYn)
+        {
+            roomNumber++; // 방 번호 증가
+            // 함정 처리 로직
+            SetUpTrap();
+            thisRoom.text = "Room : " + roomNumber;
+            handUi.text = "Room : " + roomNumber;
+        }
+    }
+}
+```
+</details>
+
+<details>
+        <summary>🎮게임 매니저   </summary>
+   
+```csharp
+public class GameManager : MonoBehaviour
+{
+    public static GameManager instance;
+    public Image image;
+    public AudioClip lockerSound;  // 사물함 소리
+    public AudioClip catSound;     // 고양이 소리
+    public AudioSource doorSound;  // 문 여는 소리
+    public AudioSource respawnSound;  // 리스폰 소리
+    
+    void Awake()
+    {
+        // 싱글톤 패턴 구현
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+        
+        // 오디오 소스 초기화
+        if (doorSound == null) doorSound = gameObject.AddComponent<AudioSource>();
+        if (respawnSound == null) respawnSound = gameObject.AddComponent<AudioSource>();
+    }
+    
+    // 페이드 효과 구현
+    public void FadeOut()
+    {
+        StartCoroutine(FadeCoroutine());
+    }
+    
+    IEnumerator FadeCoroutine()
+    {
+        // 페이드 아웃
+        float fadeCount = 0f;
+        while (fadeCount < 1.0f)
+        {
+            fadeCount += 0.1f;
+            yield return new WaitForSeconds(0.001f);
+            image.color = new Color(0, 0, 0, fadeCount);
+        }
+        
+        // 페이드 인
+        yield return new WaitForSeconds(0.5f);
+        fadeCount = 1f;
+        while (fadeCount > 0.0f)
+        {
+            fadeCount -= 0.01f;
+            yield return new WaitForSeconds(0.05f);
+            image.color = new Color(0, 0, 0, fadeCount);
+        }
+    }
+}
+```
+</details>
+
+<details>
+        <summary>🎲상호작용 시스템  </summary>
+   
+```csharp
+public class OpenLocker : MonoBehaviour
+{
+    private bool isOpen = false;  // 문이 열려있는지 상태를 체크
+    private Quaternion startRotation;  // 시작 회전값
+    private Quaternion targetRotation;  // 목표 회전값
+    public GameObject door;
+    public float rotationSpeed = 1f;  // 회전 속도 조절 변수
+    private AudioSource lockerAudio;  // 각 Locker의 개별 AudioSource
+    
+    void Start()
+    {
+        // 초기 회전값과 목표 회전값 설정
+        startRotation = door.transform.rotation;
+        targetRotation = Quaternion.Euler(0, startRotation.eulerAngles.y + -90f, 0);
+        
+        // 오디오 설정
+        lockerAudio = gameObject.AddComponent<AudioSource>();
+        lockerAudio.clip = GameManager.instance.lockerSound;
+        lockerAudio.spatialBlend = 1f;  // 3D 사운드 설정
+    }
+    
+    // 클릭 이벤트 처리
+    public void OnClickOpen()
+    {
+        if (!isOpen) 
+        { 
+            PlayLockerSound(0f, 1f);
+            StartCoroutine(OpenDoorSmooth());
+            isOpen = !isOpen;
+        }
+        else if (isOpen)
+        {
+            PlayLockerSound(2f, 2.7f);
+            StartCoroutine(CloseDoorSmooth());
+            isOpen = !isOpen;
+        }
+    }
+    
+    // 부드러운 문 열기 애니메이션
+    IEnumerator OpenDoorSmooth()
+    {
+        float elapsedTime = 0f;
+        float duration = rotationSpeed;
+        Quaternion currentRotation = door.transform.rotation;
+        
+        while (elapsedTime < duration)
+        {
+            door.transform.rotation = Quaternion.Lerp(currentRotation, targetRotation, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        door.transform.rotation = targetRotation;
+    }
+}
+```
+</details>
       <div>
         <img src="https://img.shields.io/badge/VR탈출게임-5cb85c?style=flat-square"/>
         <img src="https://img.shields.io/badge/Oculus-5bc0de?style=flat-square"/>
