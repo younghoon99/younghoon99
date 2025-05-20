@@ -1260,7 +1260,7 @@ public class Npc : MonoBehaviour
       <p>Unity XR과 Oculus Quest 2를 활용한 VR 탈출 게임입니다. 다양한 퍼즐과 상호작용 요소를 VR 환경에 맞게 구현했습니다.</p>
       
 <details>
-        <summary>♟️🧩레벨 관리 시스템   </summary>
+        <summary>♟레벨 관리 시스템   </summary>
    
 ```csharp
 public class Level : MonoBehaviour
