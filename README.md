@@ -79,6 +79,9 @@ I am dedicated to building richer and more engaging virtual worlds."
     <td width="60%">
       <h3>🌟 VRChat 캠프파이어 맵 (2025.02.04 ~ 🔥)</h3>
       <p>실시간 네트워크 동기화와 파티클 시스템을 활용한 몽환적인 캠프파이어 맵입니다. UdonSynced와 소유권 관리 시스템으로 모든 오브젝트 상태가 실시간으로 동기화됩니다.</p>
+      <a href="https://github.com/younghoon99/_Camp" target="_blank">
+  <img src="https://img.shields.io/badge/캠프파이어_World로_이동-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
       <details>
         <summary>💧물 속 효과</summary>
    
@@ -285,6 +288,9 @@ public class WorldSound : UdonSharpBehaviour
     <td width="60%">
       <h3>🌑 VRChat 공포 월드 (2025.01.15 ~ 2025.01.31)</h3>
       <p>긴장감 넘치는 공포 체험을 제공하는 VRChat 월드입니다. 다양한 트리거와 이벤트로 사용자에게 몰입감 있는 경험을 선사합니다.</p>
+      <a href="https://github.com/younghoon99/_horror" target="_blank">
+  <img src="https://img.shields.io/badge/공포_World로_이동-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
       <details>
         <summary>💀점프스케어 관리 </summary>
    
@@ -411,6 +417,9 @@ public class CutsceneController : UdonSharpBehaviour
     <td width="60%">
       <h3>🎯 RPG 프로토타입 (2025.04.30 ~ 2025.05.13)</h3>
       <p>Unity 6 환경에서 1인 개발한 액션 RPG 프로토타입입니다. 검기 이펙트 시스템, JSON 기반 스킬 시스템, 오브젝트 풀링 최적화 등을 구현했습니다.</p>
+      <a href="https://github.com/younghoon99/_RPG" target="_blank">
+  <img src="https://img.shields.io/badge/RPG로_이동-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
       <details>
         <summary>🛜JSON 기반 스킬 시스템 </summary>
    
@@ -604,6 +613,9 @@ public class Player : MonoBehaviour
     <td width="60%">
       <h3>🎮 대전 프로젝트 Versus (2025.04.12 ~ 2025.04.30)</h3>
       <p>귀여운 캐릭터들의 대전 게임입니다. Photon을 통해 실시간 네트워크 시스템 구현, 채팅 구현을 했습니다 .</p>
+      <a href="https://github.com/younghoon99/Versus" target="_blank">
+  <img src="https://img.shields.io/badge/Versus로_이동-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
       
 <details>
         <summary>🖥️포톤 네트워크 채팅 시스템   </summary>
@@ -809,6 +821,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     <td width="60%">
       <h3>🏰 타운 프로젝트 Long live town (2025.03.22 ~ 2025.04.22)</h3>
       <p>생존과 마을 디펜스 요소를 결합한 2D 게임입니다. 자원 관리, 타워 건설, 적 방어 시스템을 구현했습니다.</p>
+      <a href="https://github.com/younghoon99/LongLiveTown" target="_blank">
+  <img src="https://img.shields.io/badge/LongLiveTown로_이동-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
       
 <details>
         <summary>🧟적 체력 및 데미지 시스템    </summary>
@@ -1258,6 +1273,9 @@ public class Npc : MonoBehaviour
     <td width="60%">
       <h3>🚪 Room Escape - VR 콘텐츠 (2025.01.20 ~ 2025.02.08)</h3>
       <p>Unity XR과 Oculus Quest 2를 활용한 VR 탈출 게임입니다. 다양한 퍼즐과 상호작용 요소를 VR 환경에 맞게 구현했습니다.</p>
+      <a href="https://github.com/younghoon99/Room-Escape" target="_blank">
+  <img src="https://img.shields.io/badge/Room-Escape로_이동-181717?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
       
 <details>
         <summary>♟레벨 관리 시스템   </summary>
