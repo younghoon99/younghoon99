@@ -82,8 +82,8 @@ I am dedicated to building richer and more engaging virtual worlds."
     <td width="60%">
       <h3>🌟 버그를 찾아라 (2025.03.15 ~ 2025.04.10)</h3>
       <p>VRChat SDK와 UdonSharp을 활용하여 "숨어라 벌레잡기" 비대칭 멀티플레이어 게임을 설계·구현했습니다.</p>
-      <a href="https://github.com/younghoon99/_Camp" target="_blank">
-  <img src="https://img.shields.io/badge/버그 찾기로 이동(깃 링크 미완성)-757575?style=for-the-badge&logo=github&logoColor=white"/>
+      <a href="https://github.com/younghoon99/BugGame" target="_blank">
+  <img src="https://img.shields.io/badge/버그 찾기 게임으로 이동-757575?style=for-the-badge&logo=github&logoColor=white"/>
 </a>
       <details>
         <summary>⭐팀 배정</summary>
