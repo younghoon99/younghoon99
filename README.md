@@ -70,6 +70,232 @@ I am dedicated to building richer and more engaging virtual worlds."
 ## 🎮 Project Gallery
 
 <table>
+   <tr>
+    <td width="40%">
+      <a href="https://youtu.be/zwbzy_umyso">
+        <img src="https://file.notion.so/f/f/6b98e78d-cc49-47f6-a0bf-9b1b0470f6ac/d6ceb84c-623b-4c2c-9394-9555ffa3c87e/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2025-05-27_173703.png?table=block&id=200ddb27-d189-804f-8162-f6c958d2bf56&spaceId=6b98e78d-cc49-47f6-a0bf-9b1b0470f6ac&expirationTimestamp=1748368800000&signature=4oF13Sus4-Lv0hafix59wDBMwLvgXnYh7yGBswG6R1s&downloadName=%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7+2025-05-27+173703.png" width="100%" alt="캠프파이어 맵"/>
+      </a>
+      <div align="center">
+        <small><i>👆 이미지 클릭시 유튜브로 이동</i></small>
+      </div>
+    </td>
+    <td width="60%">
+      <h3>🌟 버그를 찾아라 (2025.03.15 ~ 2025.04.10)</h3>
+      <p>VRChat SDK와 UdonSharp을 활용하여 "숨어라 벌레잡기" 비대칭 멀티플레이어 게임을 설계·구현했습니다.</p>
+      <a href="https://github.com/younghoon99/_Camp" target="_blank">
+  <img src="https://img.shields.io/badge/버그 찾기로 이동(깃 링크 미완성)-757575?style=for-the-badge&logo=github&logoColor=white"/>
+</a>
+      <details>
+        <summary>⭐팀 배정</summary>
+   
+```csharp
+/// <summary>
+/// 플레이어 팀 배정 (마스터 클라이언트에서만 호출)
+/// </summary>
+public void AssignTeams()
+{
+    // 마스터 클라이언트만 실행
+    if (!Utilities.IsValid(localPlayer) || !localPlayer.isMaster) return;
+
+    // 플레이어 목록 가져오기
+    VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
+    players = VRCPlayerApi.GetPlayers(players);
+    playerCount = players.Length;
+
+    // 팀 배정 초기화
+    for (int i = 0; i < playerTeams.Length; i++)
+    {
+        playerTeams[i] = -1; // 미배정 상태로 초기화
+    }
+
+    // 최소 인원 체크
+    if (playerCount < minTotalPlayers)
+    {
+        Debug.Log("플레이어 수가 부족합니다. 최소 " + minTotalPlayers + "명 필요");
+        return;
+    }
+
+    // 사냥꾼 팀 배정 (1명)
+    int hunterIndex = UnityEngine.Random.Range(0, playerCount);
+    playerTeams[players[hunterIndex].playerId] = TEAM_HUNTER;
+
+    // 나머지 플레이어는 벌레 팀으로 배정
+    for (int i = 0; i < playerCount; i++)
+    {
+        if (i != hunterIndex)
+        {
+            playerTeams[players[i].playerId] = TEAM_BUG;
+        }
+    }
+
+    // 로컬 플레이어 팀 설정
+    localPlayerTeam = playerTeams[localPlayerId];
+
+    // 네트워크 동기화
+    RequestSerialization();
+
+    Debug.Log("팀 배정 완료: 사냥꾼 " + players[hunterIndex].displayName + ", 벌레 " + (playerCount - 1) + "명");
+}
+```
+</details>
+
+
+ <details>
+        <summary>🔨망치 타격 시스템</summary>
+   
+```csharp
+// 트리거 충돌 감지
+private void OnTriggerEnter(Collider other)
+{
+    if (!Utilities.IsValid(localPlayer) || !Utilities.IsValid(checkPlayer)) return;
+    
+    // 망치가 휘두르는 중이 아니면 충돌 무시
+    if (!isSwinging) return;
+    
+    Debug.Log("망치 충돌 감지");
+    
+    // 충돌 위치 계산
+    Vector3 hitPosition = other.ClosestPoint(transform.position);
+    
+    // 타격 효과 표시 (있는 경우)
+    ShowHitEffect(hitPosition);
+    
+    // 테스트용 벌레 오브젝트 감지 추가
+    TestBug testBug = other.GetComponent<TestBug>();
+    if (testBug != null)
+    {
+        Debug.Log("테스트 벌레 오브젝트를 타격했습니다!");
+        
+        // 타격 효과음 재생
+        PlayHitSound();
+        
+        // 테스트 벌레 오브젝트에 타격 이벤트 전달
+        testBug.OnHit();
+        return;
+    }
+    
+    // 모든 플레이어 가져오기
+    VRCPlayerApi[] players = new VRCPlayerApi[VRCPlayerApi.GetPlayerCount()];
+    VRCPlayerApi.GetPlayers(players);
+    
+    // 모든 플레이어에 대해 거리 계산
+    foreach (var player in players)
+    {
+        if (!Utilities.IsValid(player)) continue;
+        
+        // 플레이어의 위치와 충돌 지점의 거리 확인
+        float distance = Vector3.Distance(player.GetPosition(), hitPosition);
+        
+        if (distance < hitRadius) // 설정된 타격 감지 반경 내에 있는지 확인
+        {
+            Debug.Log("플레이어가 타격 범위 내에 있습니다. 거리: " + distance);
+            
+            // CheckPlayer를 통해 팀 확인
+            int playerTeam = checkPlayer.GetPlayerTeam(player.playerId);
+            Debug.Log("플레이어의 팀: " + playerTeam);
+            
+            if (playerTeam == CheckPlayer.TEAM_BUG) // 벌레 팀인 경우
+            {
+                Debug.Log("벌레 팀 플레이어를 타격했습니다!");
+                
+                // 타격 효과음 재생 (있는 경우)
+                PlayHitSound();
+                
+                // 네트워크 소유자인 경우에만 탈락 처리 (마스터 클라이언트)
+                if (Networking.IsMaster)
+                {
+                    // 벌레 팀 플레이어 탈락 처리
+                    checkPlayer.EliminatePlayer(player.playerId);
+                    
+                    // GameManager에 탈락 이벤트 전달
+                    if (gameManager != null)
+                    {
+                        gameManager.OnPlayerEliminated(player.playerId);
+                    }
+                    
+                    Debug.Log("플레이어가 탈락 처리되었습니다.");
+                }
+            }
+        }
+    }
+}
+```
+</details>
+ <details>
+        <summary>🎰게임 승리 조건 및 결과 처리</summary>
+   
+```csharp
+/// <summary>
+/// 플레이어 탈락 처리 (HammerController에서 호출)
+/// </summary>
+public void OnPlayerEliminated(int playerId)
+{
+    if (!localPlayer.isMaster) return;
+
+    // 탈락한 플레이어가 벌레 팀인지 확인
+    if (checkPlayer.GetPlayerTeam(playerId) == TEAM_BUG)
+    {
+        // 살아있는 벌레 수 감소
+        aliveBugCount--;
+
+        // 벌레가 모두 탈락하면 사냥꾼 팀 승리
+        if (aliveBugCount <= 0)
+        {
+            EndGame(WINNER_HUNTER);
+        }
+
+        // 네트워크 동기화
+        RequestSerialization();
+
+        // 전체 플레이어에게 상태 알림
+        SendCustomNetworkEvent(VRC.Udon.Common.Interfaces.NetworkEventTarget.All, "UpdateGameStatusText");
+
+        Debug.Log("벌레 팀 플레이어 탈락: 남은 벌레 " + aliveBugCount + "명");
+    }
+}
+
+/// <summary>
+/// 게임 결과 표시
+/// </summary>
+private void ShowGameResult()
+{
+    // 승리 패널 활성화
+    if (winnerPanel != null)
+    {
+        winnerPanel.SetActive(true);
+    }
+
+    // 승리 팀 텍스트 설정
+    if (winnerText != null)
+    {
+        if (winnerTeam == WINNER_HUNTER)
+        {
+            winnerText.text = "사냥꾼 팀 승리!\n모든 벌레를 잡았습니다.";
+            winnerText.color = new Color(1f, 0.5f, 0f); // 주황색
+        }
+        else if (winnerTeam == WINNER_BUG)
+        {
+            winnerText.text = "벌레 팀 승리!\n시간 내에 살아남았습니다.";
+            winnerText.color = new Color(0.2f, 0.8f, 0.2f); // 초록색
+        }
+    }
+
+    // 게임 상태 텍스트 업데이트
+    UpdateGameStatusText();
+
+    // 5초 후 로비로 돌아가기
+    SendCustomEventDelayedSeconds("ReturnToLobby", 5.0f);
+}
+```
+</details>
+      <div>
+        <img src="https://img.shields.io/badge/네트워크-5cb85c?style=flat-square"/>
+        <img src="https://img.shields.io/badge/미니게임-5bc0de?style=flat-square"/>
+        <img src="https://img.shields.io/badge/술래잡기-d9534f?style=flat-square"/>
+      </div>
+    </td>
+  </tr>
+  
   <tr>
     <td width="40%">
       <a href="https://youtu.be/5FuCTJ1qK3s">
