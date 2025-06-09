@@ -73,7 +73,7 @@ I am dedicated to building richer and more engaging virtual worlds."
    <tr>
     <td width="40%">
       <a href="https://youtu.be/zwbzy_umyso">
-        <img src="https://file.notion.so/f/f/6b98e78d-cc49-47f6-a0bf-9b1b0470f6ac/d6ceb84c-623b-4c2c-9394-9555ffa3c87e/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2025-05-27_173703.png?table=block&id=200ddb27-d189-804f-8162-f6c958d2bf56&spaceId=6b98e78d-cc49-47f6-a0bf-9b1b0470f6ac&expirationTimestamp=1748368800000&signature=4oF13Sus4-Lv0hafix59wDBMwLvgXnYh7yGBswG6R1s&downloadName=%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7+2025-05-27+173703.png" width="100%" alt="캠프파이어 맵"/>
+        <img src="https://www.notion.so/image/attachment%3Ad6ceb84c-623b-4c2c-9394-9555ffa3c87e%3A%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2025-05-27_173703.png?table=block&id=200ddb27-d189-804f-8162-f6c958d2bf56&spaceId=6b98e78d-cc49-47f6-a0bf-9b1b0470f6ac&width=1420&userId=&cache=v2" width="100%" alt="버그를 찾아라"/>
       </a>
       <div align="center">
         <small><i>👆 이미지 클릭시 유튜브로 이동</i></small>
